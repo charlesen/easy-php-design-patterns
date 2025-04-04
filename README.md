@@ -26,6 +26,10 @@ Ils sont regroupés en 3 familles :
 ### Pattern Singleton
 Garantit qu’une classe n’a qu’une seule instance et fournit un point d’accès global.
 
+Le pattern Singleton permet de dire : “Cette chose, on ne l’instancie qu’une seule fois dans tout le programme, et tout le monde utilise la même instance”
+
+*Imagine un chef d’orchestre. Tu ne peux pas en avoir deux en même temps dans une même salle de concert. Sinon, c’est le bazar.*
+
 ⚠️ À utiliser avec parcimonie (risque d’effet global).
 ```php
 // La classe Logger est instancié à l'aide d'un singleton
@@ -45,9 +49,13 @@ class Logger {
 
 ```
 
+**Cas d'utilisation :** Le système de connexion à une base de données. Tu n’as pas besoin de créer 10 connexions à la base, tu en ouvres une et tout le monde l’utilise
+
 ### Pattern Factory
 
-Délègue la création d’un objet à une méthode d’une sous-classe.
+Délègue la création d’un objet à une méthode d’une sous-classe en fonction des besoins. Toi, tu ne sais pas comment c’est fabriqué à l’intérieur, tu fais juste ta commande (comme lorsque tu vas en magasin, tu n'as aucune idée de comment ton produit préféré a été fait en usine, en principe 😜 ).
+
+L'idée avec le pattern Factory est de pouvoir créer des objets sans te soucier de leurs détails de fabrication.
 
 ```php
 interface Transport {
@@ -76,6 +84,12 @@ class TransportFactory {
 
 Permet de faire communiquer deux interfaces à priori incompatibles.
 
+Imagine que tu aies un chargeur avec une prise française mais que ta prise murale est anglaise (ou Suisse comme cela m'est arrivé la première fois que j'ai été dans ce beau pays). Tu utilises un adaptateur pour que ça fonctionne.
+
+Dans le dev c'est pareil : parfois deux systèmes ne parlent pas la même "langue" (interface), mais tu veux quand même qu’ils collaborent. 
+
+L’adapter fait le pont entre les deux.
+
 ```php
 class OldSystem {
     public function request(): string {
@@ -102,9 +116,13 @@ class Adapter extends NewSystem {
 }
 
 ```
+**Cas d'utilisation :** : Tu as un ancien système (vieille bibliothèque PHP) qui ne respecte pas les conventions modernes, tu crées un adapter pour l’utiliser dans ton nouveau code basé sur Symfony.
 
 ### Pattern Decorator
-Ajoute dynamiquement des responsabilités à un objet.
+
+Le decorator permet de prendre un objet simple, et d’y ajouter des fonctionnalités sans le modifier fondamentalement parlant.
+
+Imagine que tu commandes un café. Tu peux le prendre nature, ou ajouter du lait, du sucre, de la crème chantilly. À chaque fois, c’est le même café… mais avec un truc en plus.
 
 ```php
 interface Notifier {
@@ -128,10 +146,17 @@ class SlackNotifier implements Notifier {
 
 ```
 
+**Cas d'utilisation :** : Tu as un service de notification de base (email), et tu veux ensuite qu’il envoie aussi sur Slack ou SMS. Plutôt que de réécrire tout, tu "décore" le service de base.
+
 ## Les Patterns comportementaux ([Doc complète](https://refactoring.guru/fr/design-patterns/behavioral-patterns))
 
 ### Pattern Strategy
+
 Permet de changer dynamiquement l’algorithme utilisé par une classe.
+
+L'idée étant que si tu veux exécuter une action, tu vas pouvoir choisir comment le faire (et pouvoir changer facilement).
+
+Imageons un peu tout ça : tu veux aller au travail. Tu peux y aller en voiture, en métro, ou à vélo. Le but est le même (arriver au boulot et serrer la main tes collègues en physique ou en virtuel), mais la stratégie change selon tes préférences ou la météo.
 
 ```php
 interface TaxStrategy {
@@ -151,12 +176,13 @@ class Cart {
         return $this->tax->calculate($price);
     }
 }
-
 ```
+
+**Cas d'utilisation :** : Calcul des taxes - tu peux avoir une stratégie différente selon le pays du client. France, Belgique, Suisse = stratégies différentes.
 
 ### Pattern Observer
 
-Permet de notifier plusieurs objets lorsqu’un changement d’état survient.
+Permet de notifier plusieurs objets lorsqu’un changement d’état survient. L'idée serait que dans ton code, quand un événement arrive (ex. : un nouvel utilisateur s’inscrit), plusieurs autres parties du système peuvent être averties et réagir (Envoyez un e-mail à l'admin, mettre à jour le CRM distant, ajout à la newsletter, ...)
 
 ```php
 interface Observer {
@@ -185,16 +211,32 @@ class EventManager {
 
 ```
 
-N.B : Symfony utilise de nombreux design patterns :
+### Pattern Command 
 
-- Dependency Injection = Strategy + Singleton
+Représente une action à faire, qu’on peut envoyer à quelqu’un (comme un agent), qui va s’en charger.
 
-- EventDispatcher = Observer
+```php
+```
 
-- HttpKernel = Front Controller
+### Pattern Front Controller
 
-- Form Component = Decorator
+C'est la porte d'entrée unique. C'est comme un immeuble avec plein d’appartements… mais une seule porte d’entrée, avec un interphone qui redirige les gens au bon endroit.
 
-- Messenger = Command, Event, CQRS
-- ...
+Symfony et beaucoup d'autres Frameworks (sinon tous) fonctionnent comme ça. Toute requête HTTP arrive par un seul fichier : index.php, puis il redirige vers le bon contrôleur, la bonne action.
+
+```php
+```
+
+## BONUS : comment Symfony les utilise-t-il ?
+
+| Pattern  | Où dans Symfony ? |
+| -------- | ------- |
+| Singleton  | Services injectés (ex : Logger) |
+| Factory  | FormFactory, Serializer, etc. |
+| Adapter  | Cache adapters (ex : Redis, Filesystem) |
+| Decorator  | Security voters, Middlewares |
+| Strategy  | Authentification (Token, JWT, etc.) |
+| Observer  | EventDispatcher |
+| Command  | Symfony Console & Messenger |
+| Front Controller  | index.php dans public/ |
 
