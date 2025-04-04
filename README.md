@@ -9,7 +9,7 @@ Ils sont regroupés en 3 familles :
 - Structurels
 - Comportementaux
 
-# Table des matières
+**Table des matières**
 1. [Les patterns de création](#les-patterns-de-création)
     1. [Pattern Singleton](#pattern-singleton)
     2. [Pattern Factory](#pattern-factory)
