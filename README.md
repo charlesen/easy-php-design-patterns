@@ -32,11 +32,6 @@ class Logger {
 
 ```
 
-### Pattern Singleton
-
-```php
-```
-
 ### Pattern Factory
 
 Délègue la création d’un objet à une méthode d’une sous-classe.
