@@ -1,15 +1,6 @@
 # Design Patterns indispensables pour un développeur PHP/Symfony
 
-Un design pattern est une solution réutilisable à un problème récurrent de conception.
-
-Les patterns ne sont pas du code à "copier-coller" sans trop réfléchir, mais des structures logiques applicables à différents contextes.
-
-Ils sont regroupés en 3 familles :
-- Créationnels
-- Structurels
-- Comportementaux
-
-**Table des matières**
+## Table des matières
 1. [Les patterns de création](#les-patterns-de-création)
     1. [Pattern Singleton](#pattern-singleton)
     2. [Pattern Factory](#pattern-factory)
@@ -20,6 +11,15 @@ Ils sont regroupés en 3 familles :
     1. [Pattern Strategy](#pattern-strategy)
     2. [Pattern Observer](#pattern-observer)
 4. [Usage des Design Patterns dans Symfony](#usage-des-design-patterns-dans-symfony)
+
+Un design pattern est une solution réutilisable à un problème récurrent de conception.
+
+Les patterns ne sont pas du code à "copier-coller" sans trop réfléchir, mais des structures logiques applicables à différents contextes.
+
+Ils sont regroupés en 3 familles :
+- Créationnels
+- Structurels
+- Comportementaux
 
 ## Les patterns de création ([Doc complète](https://refactoring.guru/fr/design-patterns/creational-patterns))
 
