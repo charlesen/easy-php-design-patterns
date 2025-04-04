@@ -10,7 +10,9 @@
 3. [Les Patterns comportementaux](#les-patterns-comportementaux)
     1. [Pattern Strategy](#pattern-strategy)
     2. [Pattern Observer](#pattern-observer)
-4. [Usage des Design Patterns dans Symfony](#usage-des-design-patterns-dans-symfony)
+    3. [Pattern Command](#pattern-command)
+    4. [Pattern Front Controller](#pattern-front-controller)
+4. [BONUS : comment Symfony les utilise-t-il ?](#bonus--comment-symfony-les-utilise-t-il-)
 
 Un design pattern est une solution réutilisable à un problème récurrent de conception.
 
