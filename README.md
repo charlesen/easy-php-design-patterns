@@ -216,6 +216,70 @@ class EventManager {
 Représente une action à faire, qu’on peut envoyer à quelqu’un (comme un agent), qui va s’en charger.
 
 ```php
+// La commande
+
+// src/Message/SendWelcomeEmail.php
+
+namespace App\Message;
+
+class SendWelcomeEmail
+{
+    public function __construct(
+        private string $email,
+        private string $name
+    ) {}
+
+    public function getEmail(): string {
+        return $this->email;
+    }
+
+    public function getName(): string {
+        return $this->name;
+    }
+}
+
+```
+
+```php
+// Le Handler
+
+// src/MessageHandler/SendWelcomeEmailHandler.php
+
+namespace App\MessageHandler;
+
+use App\Message\SendWelcomeEmail;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
+
+#[AsMessageHandler]
+class SendWelcomeEmailHandler
+{
+    public function __construct(private MailerInterface $mailer) {}
+
+    public function __invoke(SendWelcomeEmail $message): void
+    {
+        $email = (new Email())
+            ->from('hello@example.com')
+            ->to($message->getEmail())
+            ->subject('Bienvenue !')
+            ->text("Bonjour {$message->getName()}, bienvenue sur notre site.");
+
+        $this->mailer->send($email);
+    }
+}
+
+```
+
+Envoi dans un Controleur / Service 
+
+```php
+use App\Message\SendWelcomeEmail;
+use Symfony\Component\Messenger\MessageBusInterface;
+
+// ...
+$bus->dispatch(new SendWelcomeEmail($user->getEmail(), $user->getName()));
+
 ```
 
 ### Pattern Front Controller
@@ -225,6 +289,24 @@ C'est la porte d'entrée unique. C'est comme un immeuble avec plein d’appartem
 Symfony et beaucoup d'autres Frameworks (sinon tous) fonctionnent comme ça. Toute requête HTTP arrive par un seul fichier : index.php, puis il redirige vers le bon contrôleur, la bonne action.
 
 ```php
+// public/index.php (Old fashion Symfony FC)
+use App\Kernel;
+use Symfony\Component\ErrorHandler\Debug;
+use Symfony\Component\HttpFoundation\Request;
+
+require dirname(__DIR__).'/vendor/autoload.php';
+
+Debug::enable();
+
+$kernel = new Kernel('dev', true);
+$request = Request::createFromGlobals();
+
+// TOUT commence ici
+$response = $kernel->handle($request);
+$response->send();
+
+$kernel->terminate($request, $response);
+
 ```
 
 ## BONUS : comment Symfony les utilise-t-il ?
